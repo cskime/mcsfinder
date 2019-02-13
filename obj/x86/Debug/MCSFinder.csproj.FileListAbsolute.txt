@@ -3,7 +3,6 @@ C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\MCSFinder.exe.manifest
 C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\MCSFinder.application
 C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\MCSFinder.exe
 C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\MCSFinder.pdb
-C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.Form1.resources
 C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.Properties.Resources.resources
 C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.csproj.GenerateResource.cache
 C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.csproj.CoreCompileInputs.cache
@@ -12,3 +11,4 @@ C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.application
 C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.exe
 C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.pdb
 C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.csprojAssemblyReference.cache
+C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.Form1.resources

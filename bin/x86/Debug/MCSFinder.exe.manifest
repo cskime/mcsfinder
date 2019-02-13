@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MCSFinder.exe" size="16384">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MCSFinder.exe" size="18432">
       <assemblyIdentity name="MCSFinder" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>yg9pkVme3fLkJrR9Sk129+bKdjS6Wbr9gGqLfN2LHTs=</dsig:DigestValue>
+        <dsig:DigestValue>futDO2J8jqtBidLYg9a773rbQOi6L5tSNCedmhDw4JY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

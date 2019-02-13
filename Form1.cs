@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace MCSFinder
-{
+{ 
     public partial class Form1 : Form
     {
         public Form1()
@@ -22,7 +22,7 @@ namespace MCSFinder
             InitializeComponent();
         }
 
-        string[] colList = { "날짜", "이름", "경로", "용량", "종류" };
+        string[] colList = { "경로", "날짜", "ID", "이름", "용량" };
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -36,21 +36,28 @@ namespace MCSFinder
             Excel.Workbook wb = excelApp.Workbooks.Add();            // Sheet1이 포함된 빈 workbook 생성
             Excel.Worksheet ws1 = wb.Worksheets.Item["Sheet1"];       // Sheet1 가져오기
             //Excel.Worksheet ws2 = wb.Worksheets.Add(After: ws1);        // ws1 뒤에 새 워크시트 생성
-
+            
             // 열 이름 붙이기
             for (int i = 1; i <= colList.Length; i++)
                 ws1.Cells[1, i] = colList[i - 1];
             
-            // 항목 채워넣기
+            // 엑셀 테이블
             for(int row = 1; row <= lstFileView.Items.Count; row++)
             {
                 for(int col = 1; col <= 5; col++)
                 {
-                    ws1.Cells[row + 1, col] = lstFileView.Items[row - 1].SubItems[col - 1].Text;
+                    if (checkbox.Checked)
+                    {
+                        ws1.Cells[row + 1, col] = patients[row - 1].data[col - 1];
+                    }
+                    else
+                    {
+                        ws1.Cells[row + 1, col] = lstFileView.Items[row - 1].SubItems[col - 1].Text;
+                    }
                 }
             }
 
-            //Excel.Range range = ws2.Cells[1, 1];
+            //Excel.Range range = ws1.Cells[1, 1];
             //range.Formula = "=SUM(Sheet1!$A$1:$E$5)";   // 셀에 수식 기록
 
             //range = ws2.Cells[2, 1];
@@ -102,41 +109,169 @@ namespace MCSFinder
             txtWord.Focus();
         }
 
+        List<Patient> patients;
+
         private void FindFile(string dir, string word)
         {
             // 파일 목록 저장
             // 선택한 directory의 하위 dir 파일까지 모두 검색함
             string[] files = Directory.GetFiles(dir, word, SearchOption.AllDirectories);
-            
+            patients = new List<Patient>();
+
             // 파일 개수만큼 리스트에 추가
             for (int i = 0; i < files.Length; i++)
             {
                 FileInfo fileInfo = new FileInfo(files[i]);
+                string name = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                string date = String.Empty;
+                string id = String.Empty;
 
-                Regex regex = new Regex(txtRegex.Text);
-
-                // 입력 기호로 split -> 일치하는 기호가 없다면 원래 파일명 하나 반환
-                // 파일 이름이 날짜-이름.mcs 형식이거나 특정한 규칙 없이 만들어져 있음. 전자는 vals가 2개, 후자는 1개의 item을 가짐
-                string[] vals = regex.Split(Path.GetFileNameWithoutExtension(fileInfo.FullName));
-
-                // 경로 / 날짜 / 이름 / 파일크기 / 종류 
-                ListViewItem item = new ListViewItem(fileInfo.FullName);
-                switch (vals.Length)
+                // 숫자 매칭
+                string number = Regex.Match(name, "[0-9]{6,}").Value;
+                if (number.Length == 14)
                 {
-                    case 1:
-                        item.SubItems.Add("");
-                        item.SubItems.Add(vals[0]);
-                        break;
-                    case 2:
-                        item.SubItems.Add(vals[0]);
-                        item.SubItems.Add(vals[1]);
-                        break;
+                    id = number.Substring(8, 6);
+                    date = number.Substring(0, 8);
                 }
+                else if (number.Length == 8)
+                {
+                    date = number;
+                }
+                else if (number.Length == 6)
+                {
+                    id = number;
+                }
+                
+                // 글자 매칭
+                string text = Regex.Match(name, @"[a-zA-Z]+(\s|_)?[a-zA-Z]+").Value;
+                if (text.Length != 0)
+                    name = text;
+                else
+                    name = String.Empty;
+
+                // Table 생성 ; 경로 / 날짜 / 이름 / ID / 파일크기
+                ListViewItem item = new ListViewItem(fileInfo.FullName);
+
+                item.SubItems.Add(date);
+                item.SubItems.Add(id);
+                item.SubItems.Add(name);
                 item.SubItems.Add(fileInfo.Length.ToString());
-                item.SubItems.Add(fileInfo.Extension.ToString());
+
                 lstFileView.Items.Add(item);
 
+                // 빈칸 채운 테이블
+                patients.Add(new Patient(fileInfo.FullName, date, id, name, fileInfo.Length.ToString()));
             }
+
+            // 빈칸 채워넣기
+            // date, name, id 같은 row 찾아서 데이터 복사..
+            for (int row = 0; row < patients.Count; row++)
+            {
+                // 날짜
+                if (!String.IsNullOrEmpty(patients[row].data[1]))
+                {
+                    // name 있으면
+                    if (!String.IsNullOrEmpty(patients[row].data[3]))
+                    {
+                        for (int i = 0; i < patients.Count; i++)
+                        {
+                            // 날짜 같고 빈칸이어야함
+                            if (patients[row].data[1].Equals(patients[i].data[1]) &&
+                                String.IsNullOrEmpty(patients[i].data[3]))
+                            {
+                                patients[i].data[3] = patients[row].data[3];
+                            }
+                        }
+                    }
+
+                    // id 있으면
+                    if (!String.IsNullOrEmpty(patients[row].data[2]))
+                    {
+                        for (int i = 0; i < patients.Count; i++)
+                        {
+                            // 날짜 같고 빈칸이어야함
+                            if (patients[row].data[1].Equals(patients[i].data[1]) &&
+                                String.IsNullOrEmpty(patients[i].data[2]))
+                            {
+                                patients[i].data[2] = patients[row].data[2];
+                            }
+                        }
+                    }
+                }
+
+                // 이름
+                if (!String.IsNullOrEmpty(patients[row].data[3]))
+                {
+                    // 날짜 있으면
+                    if (!String.IsNullOrEmpty(patients[row].data[1]))
+                    {
+                        for (int i = 0; i < patients.Count; i++)
+                        {
+                            // 날짜 같고 빈칸이어야함
+                            if (patients[row].data[3].Equals(patients[i].data[3]) &&
+                                String.IsNullOrEmpty(patients[i].data[1]))
+                            {
+                                patients[i].data[1] = patients[row].data[1];
+                            }
+                        }
+                    }
+
+                    // id 있으면
+                    if (!String.IsNullOrEmpty(patients[row].data[2]))
+                    {
+                        for (int i = 0; i < patients.Count; i++)
+                        {
+                            // 날짜 같고 빈칸이어야함
+                            if (patients[row].data[1].Equals(patients[i].data[1]) &&
+                                String.IsNullOrEmpty(patients[i].data[2]))
+                            {
+                                patients[i].data[2] = patients[row].data[2];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public class Patient
+    {
+        public string[] data = new string[5];
+
+        //public string name;
+        //public string id;
+        //public string date;
+        //public string filesize;
+        //public string filepath;
+
+        public Patient(string filepath, string date, string id, string name, string filesize)
+        { 
+            //this.filepath = filepath;
+            //this.date = date;
+            //this.id = id;
+            //this.name = name;
+            //this.filesize = filesize;
+
+            data[0] = filepath;
+            data[1] = date;
+            data[2] = id;
+            data[3] = name;
+            data[4] = filesize;
+        }
+
+        public void setDate(string date)
+        {
+            data[1] = date;
+        }
+
+        public void setID(string id)
+        {
+            data[2] = id;
+        }
+
+        public void setName(string name)
+        {
+            data[3] = name;
         }
     }
 }
