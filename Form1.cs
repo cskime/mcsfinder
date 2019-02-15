@@ -32,15 +32,14 @@ namespace MCSFinder
                 return;
             }
 
-            Excel.Application excelApp = new Excel.Application();
-            Excel.Workbook wb = excelApp.Workbooks.Add();            // Sheet1이 포함된 빈 workbook 생성
+            Excel.Application app = new Excel.Application();
+            Excel.Workbook wb = app.Workbooks.Add();            // Sheet1이 포함된 빈 workbook 생성
             Excel.Worksheet ws1 = wb.Worksheets.Item["Sheet1"];       // Sheet1 가져오기
-            //Excel.Worksheet ws2 = wb.Worksheets.Add(After: ws1);        // ws1 뒤에 새 워크시트 생성
             
             // 열 이름 붙이기
             for (int i = 1; i <= colList.Length; i++)
                 ws1.Cells[1, i] = colList[i - 1];
-            
+
             // 엑셀 테이블
             for(int row = 1; row <= lstFileView.Items.Count; row++)
             {
@@ -56,6 +55,10 @@ namespace MCSFinder
                     }
                 }
             }
+
+            Excel.Range range = ws1.Range[ws1.Cells[1, 1], ws1.Cells[colList.Length, lstFileView.Items.Count]];
+            range.EntireColumn.AutoFit();
+
 
             //Excel.Range range = ws1.Cells[1, 1];
             //range.Formula = "=SUM(Sheet1!$A$1:$E$5)";   // 셀에 수식 기록
@@ -127,20 +130,11 @@ namespace MCSFinder
                 string id = String.Empty;
 
                 // 숫자 매칭
-                string number = Regex.Match(name, "[0-9]{6,}").Value;
-                if (number.Length == 14)
-                {
-                    id = number.Substring(8, 6);
+                string number = Regex.Match(name, "[0-9]{8,}").Value;
+                if (number.Length == 8)
                     date = number.Substring(0, 8);
-                }
-                else if (number.Length == 8)
-                {
+                else
                     date = number;
-                }
-                else if (number.Length == 6)
-                {
-                    id = number;
-                }
                 
                 // 글자 매칭
                 string text = Regex.Match(name, @"[a-zA-Z]+(\s|_)?[a-zA-Z]+").Value;
@@ -148,6 +142,9 @@ namespace MCSFinder
                     name = text;
                 else
                     name = String.Empty;
+
+                // patient list 생성
+                patients.Add(new Patient(fileInfo.FullName, date, id, name, fileInfo.Length.ToString()));
 
                 // Table 생성 ; 경로 / 날짜 / 이름 / ID / 파일크기
                 ListViewItem item = new ListViewItem(fileInfo.FullName);
@@ -158,79 +155,25 @@ namespace MCSFinder
                 item.SubItems.Add(fileInfo.Length.ToString());
 
                 lstFileView.Items.Add(item);
-
-                // 빈칸 채운 테이블
-                patients.Add(new Patient(fileInfo.FullName, date, id, name, fileInfo.Length.ToString()));
             }
 
-            // 빈칸 채워넣기
-            // date, name, id 같은 row 찾아서 데이터 복사..
-            for (int row = 0; row < patients.Count; row++)
-            {
-                // 날짜
-                if (!String.IsNullOrEmpty(patients[row].data[1]))
-                {
-                    // name 있으면
-                    if (!String.IsNullOrEmpty(patients[row].data[3]))
-                    {
-                        for (int i = 0; i < patients.Count; i++)
-                        {
-                            // 날짜 같고 빈칸이어야함
-                            if (patients[row].data[1].Equals(patients[i].data[1]) &&
-                                String.IsNullOrEmpty(patients[i].data[3]))
-                            {
-                                patients[i].data[3] = patients[row].data[3];
-                            }
-                        }
-                    }
+            // Dataset
+            var dataset = patients
+                .Where(patient => !String.IsNullOrEmpty(patient.data[1]) && !String.IsNullOrEmpty(patient.data[3]))
+                .Select(patient => patient).ToList();
 
-                    // id 있으면
-                    if (!String.IsNullOrEmpty(patients[row].data[2]))
+            // filling list
+            var fill = patients
+                .Select(patient => {
+                    var _data = dataset.Where(d => (d.data[1] == patient.data[1]) || (d.data[3] == patient.data[3])).Take(1).ToList();
+                    if (_data.Count() != 0 )
                     {
-                        for (int i = 0; i < patients.Count; i++)
-                        {
-                            // 날짜 같고 빈칸이어야함
-                            if (patients[row].data[1].Equals(patients[i].data[1]) &&
-                                String.IsNullOrEmpty(patients[i].data[2]))
-                            {
-                                patients[i].data[2] = patients[row].data[2];
-                            }
-                        }
+                        patient.data[1] = _data[0].data[1];
+                        patient.data[3] = _data[0].data[3];
                     }
-                }
-
-                // 이름
-                if (!String.IsNullOrEmpty(patients[row].data[3]))
-                {
-                    // 날짜 있으면
-                    if (!String.IsNullOrEmpty(patients[row].data[1]))
-                    {
-                        for (int i = 0; i < patients.Count; i++)
-                        {
-                            // 날짜 같고 빈칸이어야함
-                            if (patients[row].data[3].Equals(patients[i].data[3]) &&
-                                String.IsNullOrEmpty(patients[i].data[1]))
-                            {
-                                patients[i].data[1] = patients[row].data[1];
-                            }
-                        }
-                    }
-
-                    // id 있으면
-                    if (!String.IsNullOrEmpty(patients[row].data[2]))
-                    {
-                        for (int i = 0; i < patients.Count; i++)
-                        {
-                            // 날짜 같고 빈칸이어야함
-                            if (patients[row].data[1].Equals(patients[i].data[1]) &&
-                                String.IsNullOrEmpty(patients[i].data[2]))
-                            {
-                                patients[i].data[2] = patients[row].data[2];
-                            }
-                        }
-                    }
-                }
-            }
+                    return patient;
+                }).ToList();
+            patients = fill;
         }
     }
 
@@ -238,40 +181,13 @@ namespace MCSFinder
     {
         public string[] data = new string[5];
 
-        //public string name;
-        //public string id;
-        //public string date;
-        //public string filesize;
-        //public string filepath;
-
         public Patient(string filepath, string date, string id, string name, string filesize)
-        { 
-            //this.filepath = filepath;
-            //this.date = date;
-            //this.id = id;
-            //this.name = name;
-            //this.filesize = filesize;
-
+        {
             data[0] = filepath;
             data[1] = date;
             data[2] = id;
             data[3] = name;
             data[4] = filesize;
-        }
-
-        public void setDate(string date)
-        {
-            data[1] = date;
-        }
-
-        public void setID(string id)
-        {
-            data[2] = id;
-        }
-
-        public void setName(string name)
-        {
-            data[3] = name;
         }
     }
 }
