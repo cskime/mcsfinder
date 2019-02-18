@@ -42,14 +42,38 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MCSFinder.exe" size="19456">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Dicom.Core.dll" size="1208320">
+      <assemblyIdentity name="Dicom.Core" version="4.0.0.0" publicKeyToken="3A13F649E28EB09A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>5Z75rw9A5ASBo7+LnLEARiv7leHfHqjasSfsqUHR1iE=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Dicom.Native.dll" size="890880">
+      <assemblyIdentity name="Dicom.Native" version="4.0.0.0" publicKeyToken="3A13F649E28EB09A" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>SizritXdv1ac7baDZHq7juq05DaDsjPqnkRlUsL6p/k=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MCSFinder.exe" size="23552">
       <assemblyIdentity name="MCSFinder" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>jmhikLeV3/LIms/oNwSiU9TS9Y/s84kqph4uGSz6MRQ=</dsig:DigestValue>
+        <dsig:DigestValue>mpUaw0eDNAtcE/0wISCJOdwVu7WgHC76uVnnQsfTv3w=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

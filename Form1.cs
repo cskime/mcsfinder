@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
+using Dicom;
 
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -20,6 +21,29 @@ namespace MCSFinder
         public Form1()
         {
             InitializeComponent();
+
+            //string fileName = @"C:\Users\cskim\Desktop\mcstest\dicomtest\FILE00225.dcm";
+            string fileName = @"C:\Users\cskim\Desktop\mcstest\dicomtest\dataset\01\01. AP_B_23007244.dcm";
+
+            DicomTag[] dcmTags = {
+                DicomTag.PatientID,
+                DicomTag.PatientName,
+                DicomTag.PatientBirthDate,
+                DicomTag.StudyDate,
+                DicomTag.SeriesDate
+            };
+
+            string[] tags = new string[dcmTags.Length];
+
+            var file = DicomFile.Open(fileName);
+            for (int i = 0; i < dcmTags.Length; i++)
+                tags[i] = file.Dataset.Get<string>(dcmTags[i]);
+
+            Console.WriteLine("ID : " + tags[0]);
+            Console.WriteLine("NAME : " + decodeKR(tags[1]));
+            Console.WriteLine("BIRTH : " + tags[2]);
+            Console.WriteLine("STUDY : " + tags[3]);
+            Console.WriteLine("SERISE : " + tags[4]);
         }
 
         string[] colList = { "경로", "날짜", "ID", "이름", "용량" };
@@ -59,13 +83,6 @@ namespace MCSFinder
             Excel.Range range = ws1.Range[ws1.Cells[1, 1], ws1.Cells[colList.Length, lstFileView.Items.Count]];
             range.EntireColumn.AutoFit();
 
-
-            //Excel.Range range = ws1.Cells[1, 1];
-            //range.Formula = "=SUM(Sheet1!$A$1:$E$5)";   // 셀에 수식 기록
-
-            //range = ws2.Cells[2, 1];
-            //range.Formula = "=AVERAGE(Sheet1!A1:E5)";
-
             SaveFileDialog saveFileDlg = new SaveFileDialog();
             saveFileDlg.Title = "파일 저장";
             saveFileDlg.OverwritePrompt = true;
@@ -86,9 +103,6 @@ namespace MCSFinder
             {
                 this.txtDir.Text = dir.SelectedPath.Trim(); //선택한 디렉토리 경로
             }
-
-            // 포커스 단어 입력창으로 이동
-            txtWord.Focus();
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -125,7 +139,7 @@ namespace MCSFinder
             for (int i = 0; i < files.Length; i++)
             {
                 FileInfo fileInfo = new FileInfo(files[i]);
-                string name = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                string name = Path.GetFileNameWithoutExtension(fileInfo.Name);
                 string date = String.Empty;
                 string id = String.Empty;
 
@@ -137,9 +151,9 @@ namespace MCSFinder
                     date = number;
                 
                 // 글자 매칭
-                string text = Regex.Match(name, @"[a-zA-Z]+(\s|_)?[a-zA-Z]+").Value;
+                string text = Regex.Match(name, @"[^0-9\-]+(\s|_)?[^(0-9)]+").Value;
                 if (text.Length != 0)
-                    name = text;
+                    name = decodeKR(text);
                 else
                     name = String.Empty;
 
@@ -174,6 +188,19 @@ namespace MCSFinder
                     return patient;
                 }).ToList();
             patients = fill;
+        }
+
+        public string decodeKR(string name)
+        {
+            // 한글 디코딩
+            Encoding iso = Encoding.GetEncoding("ISO-8859-1");
+            Decoder euckr = Encoding.GetEncoding(51949).GetDecoder();
+            byte[] isoByte = iso.GetBytes(name);
+            char[] decodename;
+            int charCount = euckr.GetCharCount(isoByte, 0, isoByte.Length);
+            decodename = new char[charCount];
+            int charDecodedCount = euckr.GetChars(isoByte, 0, isoByte.Length, decodename, 0);
+            return new string(decodename);
         }
     }
 
