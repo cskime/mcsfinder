@@ -28,183 +28,187 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnSave = new System.Windows.Forms.Button();
             this.dirLabel = new System.Windows.Forms.Label();
-            this.resultLabel = new System.Windows.Forms.Label();
             this.txtDir = new System.Windows.Forms.TextBox();
             this.btnDir = new System.Windows.Forms.Button();
-            this.txtWord = new System.Windows.Forms.TextBox();
-            this.lstFileView = new System.Windows.Forms.ListView();
-            this.colPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnSearch = new System.Windows.Forms.Button();
-            this.lblRegex = new System.Windows.Forms.Label();
-            this.txtRegex = new System.Windows.Forms.TextBox();
-            this.checkbox = new System.Windows.Forms.CheckBox();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.mcsprogress = new System.Windows.Forms.ProgressBar();
+            this.dcmprogress = new System.Windows.Forms.ProgressBar();
+            this.searchCheckBox = new System.Windows.Forms.CheckedListBox();
+            this.resultCheckBox = new System.Windows.Forms.CheckedListBox();
+            this.lstResultView = new System.Windows.Forms.ListView();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.checkDCM = new System.Windows.Forms.CheckBox();
+            this.checkMCS = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
-            // 
-            // btnSave
-            // 
-            this.btnSave.Location = new System.Drawing.Point(528, 4);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(111, 41);
-            this.btnSave.TabIndex = 0;
-            this.btnSave.Text = "Excel 저장";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // dirLabel
             // 
             this.dirLabel.AutoSize = true;
-            this.dirLabel.Location = new System.Drawing.Point(8, 7);
+            this.dirLabel.Location = new System.Drawing.Point(11, 9);
             this.dirLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.dirLabel.Name = "dirLabel";
             this.dirLabel.Size = new System.Drawing.Size(57, 12);
             this.dirLabel.TabIndex = 1;
             this.dirLabel.Text = "검색 경로";
             // 
-            // resultLabel
-            // 
-            this.resultLabel.AutoSize = true;
-            this.resultLabel.Location = new System.Drawing.Point(8, 30);
-            this.resultLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.resultLabel.Name = "resultLabel";
-            this.resultLabel.Size = new System.Drawing.Size(57, 12);
-            this.resultLabel.TabIndex = 1;
-            this.resultLabel.Text = "찾을 파일";
-            // 
             // txtDir
             // 
-            this.txtDir.Location = new System.Drawing.Point(73, 4);
-            this.txtDir.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtDir.Location = new System.Drawing.Point(78, 4);
+            this.txtDir.Margin = new System.Windows.Forms.Padding(2);
             this.txtDir.Name = "txtDir";
-            this.txtDir.Size = new System.Drawing.Size(282, 21);
+            this.txtDir.Size = new System.Drawing.Size(512, 21);
             this.txtDir.TabIndex = 2;
             // 
             // btnDir
             // 
-            this.btnDir.Location = new System.Drawing.Point(358, 4);
-            this.btnDir.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDir.Location = new System.Drawing.Point(592, 4);
+            this.btnDir.Margin = new System.Windows.Forms.Padding(2);
             this.btnDir.Name = "btnDir";
-            this.btnDir.Size = new System.Drawing.Size(52, 19);
+            this.btnDir.Size = new System.Drawing.Size(60, 21);
             this.btnDir.TabIndex = 3;
-            this.btnDir.Text = "찾기";
+            this.btnDir.Text = "...";
             this.btnDir.UseVisualStyleBackColor = true;
             this.btnDir.Click += new System.EventHandler(this.btnDir_Click);
             // 
-            // txtWord
-            // 
-            this.txtWord.Location = new System.Drawing.Point(73, 27);
-            this.txtWord.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtWord.Name = "txtWord";
-            this.txtWord.Size = new System.Drawing.Size(138, 21);
-            this.txtWord.TabIndex = 4;
-            this.txtWord.Text = "*.mcs";
-            // 
-            // lstFileView
-            // 
-            this.lstFileView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colPath,
-            this.colDate,
-            this.colID,
-            this.colName,
-            this.colSize});
-            this.lstFileView.GridLines = true;
-            this.lstFileView.Location = new System.Drawing.Point(10, 49);
-            this.lstFileView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.lstFileView.Name = "lstFileView";
-            this.lstFileView.Size = new System.Drawing.Size(937, 559);
-            this.lstFileView.TabIndex = 5;
-            this.lstFileView.UseCompatibleStateImageBehavior = false;
-            this.lstFileView.View = System.Windows.Forms.View.Details;
-            // 
-            // colPath
-            // 
-            this.colPath.Text = "경로";
-            this.colPath.Width = 300;
-            // 
-            // colDate
-            // 
-            this.colDate.Text = "날짜";
-            this.colDate.Width = 100;
-            // 
-            // colID
-            // 
-            this.colID.Text = "ID";
-            this.colID.Width = 80;
-            // 
-            // colName
-            // 
-            this.colName.Text = "이름";
-            this.colName.Width = 120;
-            // 
-            // colSize
-            // 
-            this.colSize.Text = "파일 용량";
-            this.colSize.Width = 130;
-            // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(414, 4);
-            this.btnSearch.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSearch.Location = new System.Drawing.Point(270, 30);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(2);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(109, 41);
+            this.btnSearch.Size = new System.Drawing.Size(60, 50);
             this.btnSearch.TabIndex = 6;
             this.btnSearch.Text = "검색";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // lblRegex
+            // txtSearch
             // 
-            this.lblRegex.AutoSize = true;
-            this.lblRegex.Location = new System.Drawing.Point(222, 30);
-            this.lblRegex.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblRegex.Name = "lblRegex";
-            this.lblRegex.Size = new System.Drawing.Size(46, 12);
-            this.lblRegex.TabIndex = 7;
-            this.lblRegex.Text = "Reg Ex";
+            this.txtSearch.Location = new System.Drawing.Point(13, 109);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(147, 21);
+            this.txtSearch.TabIndex = 16;
             // 
-            // txtRegex
+            // mcsprogress
             // 
-            this.txtRegex.Location = new System.Drawing.Point(272, 27);
-            this.txtRegex.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtRegex.Name = "txtRegex";
-            this.txtRegex.Size = new System.Drawing.Size(139, 21);
-            this.txtRegex.TabIndex = 8;
-            this.txtRegex.Text = "-";
+            this.mcsprogress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mcsprogress.Location = new System.Drawing.Point(334, 101);
+            this.mcsprogress.Name = "mcsprogress";
+            this.mcsprogress.Size = new System.Drawing.Size(314, 23);
+            this.mcsprogress.TabIndex = 18;
             // 
-            // checkbox
+            // dcmprogress
             // 
-            this.checkbox.AutoSize = true;
-            this.checkbox.Location = new System.Drawing.Point(643, 17);
-            this.checkbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.checkbox.Name = "checkbox";
-            this.checkbox.Size = new System.Drawing.Size(88, 16);
-            this.checkbox.TabIndex = 9;
-            this.checkbox.Text = "빈칸 채우기";
-            this.checkbox.UseVisualStyleBackColor = true;
+            this.dcmprogress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dcmprogress.Location = new System.Drawing.Point(334, 51);
+            this.dcmprogress.Name = "dcmprogress";
+            this.dcmprogress.Size = new System.Drawing.Size(314, 23);
+            this.dcmprogress.TabIndex = 19;
+            // 
+            // searchCheckBox
+            // 
+            this.searchCheckBox.CheckOnClick = true;
+            this.searchCheckBox.FormattingEnabled = true;
+            this.searchCheckBox.Items.AddRange(new object[] {
+            "이름",
+            "ID",
+            "생년월일",
+            "촬영일자"});
+            this.searchCheckBox.Location = new System.Drawing.Point(13, 30);
+            this.searchCheckBox.Name = "searchCheckBox";
+            this.searchCheckBox.Size = new System.Drawing.Size(147, 68);
+            this.searchCheckBox.TabIndex = 23;
+            this.searchCheckBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.searchCheckBox_ItemCheck);
+            // 
+            // resultCheckBox
+            // 
+            this.resultCheckBox.CheckOnClick = true;
+            this.resultCheckBox.FormattingEnabled = true;
+            this.resultCheckBox.Items.AddRange(new object[] {
+            "이름",
+            "ID",
+            "생년월일",
+            "촬영일자",
+            "mcs 경로",
+            "dcm 경로",
+            "용량"});
+            this.resultCheckBox.Location = new System.Drawing.Point(164, 30);
+            this.resultCheckBox.Name = "resultCheckBox";
+            this.resultCheckBox.Size = new System.Drawing.Size(100, 100);
+            this.resultCheckBox.TabIndex = 24;
+            this.resultCheckBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.resultCheckBox_ItemCheck);
+            // 
+            // lstResultView
+            // 
+            this.lstResultView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstResultView.Location = new System.Drawing.Point(12, 136);
+            this.lstResultView.Name = "lstResultView";
+            this.lstResultView.Size = new System.Drawing.Size(638, 258);
+            this.lstResultView.TabIndex = 25;
+            this.lstResultView.UseCompatibleStateImageBehavior = false;
+            this.lstResultView.View = System.Windows.Forms.View.Details;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(270, 84);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(60, 45);
+            this.btnSave.TabIndex = 37;
+            this.btnSave.Text = "저장";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // checkDCM
+            // 
+            this.checkDCM.AutoSize = true;
+            this.checkDCM.Location = new System.Drawing.Point(334, 30);
+            this.checkDCM.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkDCM.Name = "checkDCM";
+            this.checkDCM.Size = new System.Drawing.Size(52, 16);
+            this.checkDCM.TabIndex = 38;
+            this.checkDCM.Text = "DCM";
+            this.checkDCM.UseVisualStyleBackColor = true;
+            // 
+            // checkMCS
+            // 
+            this.checkMCS.AutoSize = true;
+            this.checkMCS.Location = new System.Drawing.Point(334, 80);
+            this.checkMCS.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkMCS.Name = "checkMCS";
+            this.checkMCS.Size = new System.Drawing.Size(52, 16);
+            this.checkMCS.TabIndex = 39;
+            this.checkMCS.Text = "MCS";
+            this.checkMCS.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(958, 619);
-            this.Controls.Add(this.checkbox);
-            this.Controls.Add(this.txtRegex);
-            this.Controls.Add(this.lblRegex);
+            this.ClientSize = new System.Drawing.Size(661, 413);
+            this.Controls.Add(this.checkMCS);
+            this.Controls.Add(this.checkDCM);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.lstResultView);
+            this.Controls.Add(this.resultCheckBox);
+            this.Controls.Add(this.searchCheckBox);
+            this.Controls.Add(this.dcmprogress);
+            this.Controls.Add(this.mcsprogress);
+            this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnSearch);
-            this.Controls.Add(this.lstFileView);
-            this.Controls.Add(this.txtWord);
             this.Controls.Add(this.btnDir);
             this.Controls.Add(this.txtDir);
-            this.Controls.Add(this.resultLabel);
             this.Controls.Add(this.dirLabel);
-            this.Controls.Add(this.btnSave);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.MinimumSize = new System.Drawing.Size(677, 452);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -213,23 +217,19 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label dirLabel;
-        private System.Windows.Forms.Label resultLabel;
         private System.Windows.Forms.TextBox txtDir;
         private System.Windows.Forms.Button btnDir;
-        private System.Windows.Forms.TextBox txtWord;
-        private System.Windows.Forms.ListView lstFileView;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.ColumnHeader colName;
-        private System.Windows.Forms.ColumnHeader colDate;
-        private System.Windows.Forms.ColumnHeader colPath;
-        private System.Windows.Forms.ColumnHeader colSize;
-        private System.Windows.Forms.ColumnHeader colID;
-        private System.Windows.Forms.Label lblRegex;
-        private System.Windows.Forms.TextBox txtRegex;
-        private System.Windows.Forms.CheckBox checkbox;
+        private System.Windows.Forms.TextBox txtSearch;
+        private System.Windows.Forms.ProgressBar mcsprogress;
+        private System.Windows.Forms.ProgressBar dcmprogress;
+        private System.Windows.Forms.CheckedListBox searchCheckBox;
+        private System.Windows.Forms.CheckedListBox resultCheckBox;
+        private System.Windows.Forms.ListView lstResultView;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.CheckBox checkDCM;
+        private System.Windows.Forms.CheckBox checkMCS;
     }
 }
 
