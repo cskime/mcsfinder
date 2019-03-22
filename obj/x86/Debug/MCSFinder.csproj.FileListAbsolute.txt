@@ -18,3 +18,5 @@ C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\Dicom.Native.dll
 C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\Dicom.Core.pdb
 C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\Dicom.Core.xml
 C:\Users\cskim\Desktop\MCSFinder\obj\x86\Debug\MCSFinder.csproj.CopyComplete
+C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\System.ValueTuple.dll
+C:\Users\cskim\Desktop\MCSFinder\bin\x86\Debug\System.ValueTuple.xml

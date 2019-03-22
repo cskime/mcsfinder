@@ -103,8 +103,6 @@ namespace MCSFinder
                 if (result == DialogResult.OK && !String.IsNullOrEmpty(dir.SelectedPath))
                 {
                     this.txtDir.Text = dir.SelectedPath.Trim(); //선택한 디렉토리 경로
-                                                                // mcs, dcm 검색
-                    
                     if (checkMCS.Checked)
                         FindFile(txtDir.Text.Trim(), "*.mcs");
 
@@ -114,18 +112,16 @@ namespace MCSFinder
             }
         }
 
-        private List<string> FindSet(string inputItem, string input, string outputItem)
+        private List<string> FindSet((string, string) input, string outputItem)
         {
-            var inputDCM = dcmdata.SearchDCM(inputItem, input).ToList();
-            var outputDCM = inputDCM.SearchDCM(outputItem).ToList();
-            if (outputDCM.Count == 0)
-            {
-                var inputMCS = mcsdata.SearchMCS(inputItem, input).ToList();
-                var outputMCS = inputMCS.SearchMCS(outputItem).ToList();
-                return outputMCS;
+            var dcmset = dcmdata.SelectRow(input).GetColumn(outputItem).ToList();
+            if (dcmset.Count == 0)
+            { 
+                var mcsset = mcsdata.SelectRow(input).GetColumn(outputItem).ToList();
+                return mcsset;
             }
             else
-                return outputDCM;
+                return dcmset;
         }
         
         private void btnSearch_Click(object sender, EventArgs e)
@@ -156,7 +152,7 @@ namespace MCSFinder
             }
             else
             { 
-                string input = txtSearch.Text.Trim();
+                string inputText = txtSearch.Text.Trim();
                 string inputItem = String.Empty;
                 string outputItem = String.Empty;
                 List<string> output = new List<string>();
@@ -167,7 +163,8 @@ namespace MCSFinder
                 foreach (var s in resultCheckBox.CheckedItems)
                     outputItem = s.ToString();
 
-                output = FindSet(inputItem, input, outputItem);
+                var input = (text: inputText, item: inputItem);
+                output = FindSet(input, outputItem);
 
                 if (output.Count == 0)
                 {
@@ -176,11 +173,11 @@ namespace MCSFinder
                 }
 
                 lstResultView.Clear();
-                lstResultView.Columns.Add(inputItem, 150);
-                lstResultView.Columns.Add(outputItem, 150);
+                lstResultView.Columns.Add(inputItem, 100);
+                lstResultView.Columns.Add(outputItem, 400);
                 foreach (var val in output)
                 {
-                    ListViewItem item = new ListViewItem(input);
+                    ListViewItem item = new ListViewItem(input.text);
                     item.SubItems.Add(val);
                     lstResultView.Items.Add(item);
                 }
@@ -214,7 +211,7 @@ namespace MCSFinder
                     date = number;
                 
                 // 글자 매칭
-                string text = Regex.Match(name, @"[^0-9\-]+(\s|_)?[^(0-9)]+").Value;
+                string text = Regex.Match(name, @"[^0-9\-]+(\s|_)?[^0-9\-]+(\s|_)?[^0-9]*").Value.Trim();
                 if (text.Length != 0)
                     name = decodeKR(text);
                 else
@@ -362,6 +359,7 @@ namespace MCSFinder
             }
             else if (e.NewValue == CheckState.Unchecked)
                 resultset[resultCheckBox.Items[e.Index].ToString()] = false;
+            
         }
     }
 }

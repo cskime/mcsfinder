@@ -15,36 +15,32 @@ using MCSFinder;
 using Excel = Microsoft.Office.Interop.Excel;
 using Manager;
 
-
-namespace MCSFinder
-{ 
-    public static class MCSFinder
-    {
-        public static IEnumerable<DCM> SearchDCM(this IEnumerable<DCM> dataset, string item, string input)
-        {
-            return dataset.Where(d => d.getData(item).Equals(input));
-        }
-
-        public static IEnumerable<MCS> SearchMCS(this IEnumerable<MCS> dataset, string item, string input)
-        {
-            return dataset.Where(d => d.getData(item).Equals(input)).ToList();
-        }
-
-        public static IEnumerable<string> SearchDCM(this IEnumerable<DCM> dataset, string item)
-        {
-            return dataset.Select(dcm => dcm.getData(item)).ToList();
-        }
-
-        public static IEnumerable<string> SearchMCS(this IEnumerable<MCS> dataset, string item)
-        {
-            return dataset.Select(dcm => dcm.getData(item)).ToList();
-        }
-    }
-}
-
+//SearchDCM()
+//{ CMlist.SearchCOlujnmn("이름").equal("dd")
+//    }
 
 namespace Manager
 {
+    public static class Iquery
+    {
+        public static IEnumerable<string> GetColumn(this IEnumerable<Iqueryable> dataset, string item)
+        {
+            var result = dataset.Select(s => s.GetData(item));
+            return result;
+        }
+
+        public static IEnumerable<Iqueryable> SelectRow(this IEnumerable<Iqueryable> dataset, (string text, string item) input)
+        {
+            var result = dataset.Where(s => s.GetData(input.item).Equals(input.text));
+            return result;
+        }
+
+        //public static IEnumerable<Iqueryable> Fill(this IEnumerable<Iqueryable> dataset, IEnumerable<Iqueryable> origin)
+        //{
+
+        //}
+    }
+
     public class Patient
     {
         List<MCS> mcsset;
@@ -57,15 +53,17 @@ namespace Manager
         }
     }
 
-    interface DataStorage
+    public interface Iqueryable
     {
-        string getData(string item);
+        string GetData(string item);
+        Dictionary<string, string> GetDataset();
+        bool ExistColumn(string item);
     }
 
-    public class MCS : DataStorage
+    public class MCS : Iqueryable
     {
         public string[] data = new string[5];
-        Dictionary<string, string> dataset = new Dictionary<string, string>();
+        public Dictionary<string, string> dataset = new Dictionary<string, string>();
 
         public MCS(string filepath, string studydate, string id, string name, string filesize)
         {
@@ -84,16 +82,30 @@ namespace Manager
             dataset["용량"] = filesize;
         }
 
-        public string getData(string item)
+        public string GetData(string item)
         {
-            return dataset[item];
+            string value = dataset[item];
+            return String.IsNullOrEmpty(value) ? "" : dataset[item];
+        }
+
+        public Dictionary<string, string> GetDataset()
+        {
+            return dataset;
+        }
+
+        public bool ExistColumn(string item)
+        {
+            if (dataset.ContainsKey(item))
+                return true;
+            else
+                return false;
         }
     }
 
-    public class DCM : DataStorage
+    public class DCM : Iqueryable
     {
         public string[] data = new string[5];
-        Dictionary<string, string> dataset = new Dictionary<string, string>();
+        public Dictionary<string, string> dataset = new Dictionary<string, string>();
 
         public DCM(string id, string name, string birth, string studydate, string dcmpath)
         {
@@ -112,9 +124,24 @@ namespace Manager
             dataset["용량"] = null;
         }
 
-        public string getData(string item)
+        public string GetData(string item)
         {
-            return dataset[item];
+            string value = dataset[item];
+            return String.IsNullOrEmpty(value) ? "" : dataset[item];
+        }
+
+        public Dictionary<string, string> GetDataset()
+        {
+            return dataset;
+        }
+
+
+        public bool ExistColumn(string item)
+        {
+            if (dataset.ContainsKey(item))
+                return true;
+            else
+                return false;
         }
     }
 }
