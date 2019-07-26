@@ -73,8 +73,7 @@ namespace MCSFinder
                     ws1.Cells[row + 1, col] = lstResultView.Items[row - 1].SubItems[col - 1].Text;
             }
             
-            Excel.Range range = ws1.Range[ws1.Cells[1, 1], ws1.Cells[rowCount + 1, colCount]];
-            range.EntireColumn.AutoFit();
+            ws1.Range[ws1.Cells[1, 1], ws1.Cells[rowCount + 1, colCount]].EntireColumn.AutoFit();
 
             SaveFileDialog saveFileDlg = new SaveFileDialog();
             saveFileDlg.Title = "파일 저장";
