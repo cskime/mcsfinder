@@ -55,7 +55,7 @@ Excel.Worksheet ws1 = wb.Worksheets.Item["Sheet1"];   // open sheet
 ```
 > Microsoft.Office.Interop.Excel Namespace :  https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.excel?view=excel-pia
 
-`Worksheet`의 `Cells`를 사용하면 cell에 접근해서 데이터를 읽고 쓸 수 있습니다. `Cells`는 `Range` 타입으로 row, column index를 사용해 특정 셀에 접근할 수 있습니다. `Range`는 index를 사용하면 특정 위치의 셀을 받을 수 있고, 셀을 사용하면 시작 셀부터 끝나는 셀 까지의 범위를 선택합니다.
+`Worksheet`의 `Cells`를 사용하면 cell에 접근해서 데이터를 읽고 쓸 수 있습니다. `Cells`는 `Range` 타입 속성입니다. `Range`는 row, column index를 사용하면 특정 위치의 셀을 받을 수 있고, 셀을 사용하면 시작 셀부터 끝나는 셀 까지의 범위를 선택합니다.
 ```C#
 ...
 // winform의 listview를 사용했을 때 Items와 SubItems가 row, column에 대응됨
@@ -64,6 +64,9 @@ for (int row = 1; row <= rowCount; row++)
     for (int col = 1; col <= colCount; col++)
         ws1.Cells[row + 1, col] = lstResultView.Items[row - 1].SubItems[col - 1].Text;
 }
+
+// 셀의 너비를 입력된 텍스트에 맞게 늘려줌
+ws1.Range[ws1.Cells[1, 1], ws1.Cells[rowCount + 1, colCount]].EntireColumn.AutoFit();
 ```
 
 파일로 저장할 때는 `SaveFileDialog`를 사용해서 저장 경로를 쉽게 선택할 수 있도록 했습니다. `SaveAs()` 메서드로 workbook을 저장하고 `Close()` 메서드로 작업이 끝난 workbook을 닫습니다.
