@@ -1,8 +1,8 @@
 # mcsfinder
-프로젝트에서 dicom 파일을 읽는 방법, 결과를 Excel 파일로 저장하는 방법 등을 설명합니다.
+프로젝트 진행 시 사용한 dicom read library와 결과를 Excel 파일로 저장하는 방법을 설명합니다. 
 
-## DICOM Read
-dicom 파일에서 환자 정보를 가져오려면 dicom library를 사용해서 파일을 읽은 다음 태그로 해당 값을 가져와야 합니다. dicom library는 몇 가지가 있는데 여기서는 `fo-dicom`을 사용했습니다. 라이브러리는 NuGet 패키지에서 fo-dicom으로 검색하여 받을 수 있습니다.
+## Read DICOM
+dicom library를 사용하면 dicom 파일을 읽어서 ID, 이름 등 환자 정보를 가져올 수 있습니다. dicom library는 몇 가지가 있는데 여기서는 `fo-dicom`을 사용했습니다. 라이브러리는 NuGet 패키지에서 fo-dicom으로 검색하여 받을 수 있습니다.
 ``` c#
 using Dicom;
 ```
@@ -44,7 +44,7 @@ files = files
 }).ToArray();
 ```
 
-## Excel
+## Write Excel
 NuGet 패키지에서 `Microsoft.Office.Interop.Excel`을 설치하면 excel 파일을 읽고 쓸 수 있습니다. `System.Windows.Form.Application`과 `Microsoft.Office.Interop.Excel.Application`을 구분해서 사용해야 합니다.
 ``` c#
 using Excel = Microsoft.Office.Interop.Excel;
@@ -83,7 +83,7 @@ if (saveFileDlg.ShowDialog() == DialogResult.OK)
 > Save File Dialog : https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.savefiledialog?view=netframework-4.8
 
 
-## Extensions
+## Helper
 mcs 파일로부터 이름을 파싱할 때, 이름이 깨져 있는 파일이 몇 개 있습니다. `string` 타입의 이름에서 `DecodeKorean()` 함수를 사용하면 깨진 한글을 복구할 수 있습니다. 이미 한글이거나 한글이 아닌 다른 문자는 그대로 유지됩니다.
 ``` C#
 namespace MyExtensions
