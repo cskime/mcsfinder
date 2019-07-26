@@ -11,7 +11,7 @@ using System.IO;
 using Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using Dicom;
-using Manager;
+using MyExtensions;
 
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -83,7 +83,7 @@ namespace MCSFinder
 
             if (saveFileDlg.ShowDialog() == DialogResult.OK)
             {
-                wb.SaveAs(Filename: saveFileDlg.FileName);
+                wb.SaveAs(saveFileDlg.FileName);
                 wb.Close();
             }
         }
@@ -184,6 +184,12 @@ namespace MCSFinder
             }
         }
 
+        private void Search(string path, string name)
+        {
+            string[] files = Directory.GetFiles(path, name, SearchOption.AllDirectories);
+
+        }
+
         // filepath, id, name, nameKr, birth, date, filesize)
         List<MCS> mcsdata = new List<MCS>();
         private void FindFile(string dir, string word)
@@ -213,7 +219,7 @@ namespace MCSFinder
                 // 글자 매칭
                 string text = Regex.Match(name, @"[^0-9\-]+(\s|_)?[^0-9\-]+(\s|_)?[^0-9]*").Value.Trim();
                 if (text.Length != 0)
-                    name = decodeKR(text);
+                    name = text.DecodeKR();
                 else
                     name = String.Empty;
 
@@ -223,19 +229,22 @@ namespace MCSFinder
 
             // Dataset
             var dataset = mcsdata
-                .Where(patient => !String.IsNullOrEmpty(patient.data[1]) && !String.IsNullOrEmpty(patient.data[3]))
-                .Select(patient => patient).ToList();
+                .Where(mcs => !String.IsNullOrEmpty(mcs.GetData("생년월일")) && !String.IsNullOrEmpty(mcs.GetData("이름")))
+                .ToList();
 
             // filling list
             var fill = mcsdata
-                .Select(patient => {
-                    var _data = dataset.Where(d => (d.data[1] == patient.data[1]) || (d.data[3] == patient.data[3])).Take(1).ToList();
+                .Select(mcs => {
+                    var _data = dataset
+                    .Where(d => (d.GetData("생년월일").Equals(mcs.GetData("생년월일"))) || (d.GetData("이름").Equals(mcs.GetData("이름"))))
+                    .Take(1)
+                    .ToList();
                     if (_data.Count() != 0 )
                     {
-                        patient.data[1] = _data[0].data[1];     // birth
-                        patient.data[3] = _data[0].data[3];     // name
+                        mcs.SetData("생년월일", _data[0].GetData("생년월일"));
+                        mcs.SetData("이름", _data[0].GetData("이름"));
                     }
-                    return patient;
+                    return mcs;
                 }).ToList();
             mcsdata = fill;
         }
@@ -277,8 +286,7 @@ namespace MCSFinder
                             tags[t] = "";
                         }
                     }
-                    tags[1] = decodeKR(tags[1]);    // 한글이름 디코딩
-                    tags[1] = tags[1].Replace('^', ' ');
+                    tags[1] = tags[1].DecodeKR().Replace('^', ' ');
                     
                     if (i == 0)
                         dcmdata.Add(new DCM(tags[0], tags[1], tags[2], tags[3], Path.GetDirectoryName(fileInfo.FullName)));
@@ -286,7 +294,11 @@ namespace MCSFinder
                     {
                         // 두 번째 data부터는 id, 이름, 생년월일, 촬영일자가 다른 데이터만 추가시킴
                         var result = dcmdata
-                            .Where(d => d.data[0].Equals(tags[0]) && d.data[1].Equals(tags[1]) && d.data[2].Equals(tags[2]) && d.data[3].Equals(tags[3]))
+                            .Where(dcm =>
+                            dcm.GetData("ID").Equals(tags[0]) &&
+                            dcm.GetData("이름").Equals(tags[1]) &&
+                            dcm.GetData("생년월일").Equals(tags[2]) &&
+                            dcm.GetData("촬영일자").Equals(tags[3]))
                             .ToList();
 
                         if (result.Count < 1)
@@ -294,19 +306,6 @@ namespace MCSFinder
                     }
                 }
             }               
-        }
-
-        public string decodeKR(string name)
-        {
-            // 한글 디코딩
-            Encoding iso = Encoding.GetEncoding("ISO-8859-1");
-            Decoder euckr = Encoding.GetEncoding(51949).GetDecoder();
-            byte[] isoByte = iso.GetBytes(name);
-            char[] decodename;
-            int charCount = euckr.GetCharCount(isoByte, 0, isoByte.Length);
-            decodename = new char[charCount];
-            int charDecodedCount = euckr.GetChars(isoByte, 0, isoByte.Length, decodename, 0);
-            return new string(decodename);
         }
 
         public enum Language
